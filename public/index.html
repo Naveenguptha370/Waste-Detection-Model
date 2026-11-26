@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Smart Waste Detection</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♻️</text></svg>" />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<header class="hero">
+  <h1>♻️ Smart Waste Detection System</h1>
+  <p>AI-powered waste classification, running entirely in your browser</p>
+</header>
+
+<main>
+  <section class="cards" aria-label="Supported categories">
+    <div class="card c-dry"><span>🟦</span><b>Dry Waste</b><small>♻️ Recyclable</small></div>
+    <div class="card c-wet"><span>🟩</span><b>Wet Waste</b><small>🌱 Compostable</small></div>
+    <div class="card c-sanitary"><span>🟥</span><b>Sanitary</b><small>🧴 Hygiene</small></div>
+    <div class="card c-ewaste"><span>⚡</span><b>E-Waste</b><small>💻 Electronics</small></div>
+    <div class="card c-medical"><span>🏥</span><b>Medical</b><small>🩺 Biomedical</small></div>
+  </section>
+
+  <div id="status" class="status loading">⏳ Loading AI model (≈80&nbsp;MB, first visit only)… <span id="progress"></span></div>
+
+  <section class="input panel">
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="upload" role="tab">📤 Upload image</button>
+      <button class="tab" data-tab="camera" role="tab">📸 Use camera</button>
+    </div>
+
+    <div class="tab-body" id="tab-upload">
+      <label class="drop" id="drop">
+        <input type="file" id="file" accept="image/jpeg,image/png" hidden />
+        <div class="drop-inner">
+          <div class="big">📁</div>
+          <p><b>Click to choose</b> or drag &amp; drop a JPG / PNG</p>
+        </div>
+      </label>
+      <button class="link" id="sample">…or try a sample image</button>
+    </div>
+
+    <div class="tab-body hidden" id="tab-camera">
+      <video id="video" autoplay playsinline muted></video>
+      <div class="row">
+        <button class="btn" id="startCam">Start camera</button>
+        <button class="btn primary" id="snap" disabled>Capture &amp; classify</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="results" class="hidden">
+    <div class="grid2">
+      <div class="panel">
+        <h2>🖼️ Input Image</h2>
+        <img id="preview" alt="Image being classified" />
+      </div>
+      <div class="panel">
+        <h2>🔍 Prediction Result</h2>
+        <div id="predLabel" class="pred"></div>
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 200 120" class="gauge" aria-hidden="true">
+            <path d="M20 100 A80 80 0 0 1 180 100" class="g-track" />
+            <path d="M20 100 A80 80 0 0 1 180 100" class="g-bar" id="gbar" pathLength="100" />
+          </svg>
+          <div class="g-num"><span id="conf">0</span>%<small>Confidence</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h2>📊 Probability Distribution</h2>
+        <div id="bars" class="bars"></div>
+      </div>
+      <div class="panel">
+        <h2>🍩 Prediction Breakdown</h2>
+        <div class="donut-wrap">
+          <svg viewBox="0 0 42 42" id="donut" class="donut"></svg>
+          <ul id="legend" class="legend"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel info"><h2>♻️ Waste Information</h2><p id="info"></p></div>
+      <div class="panel impact"><h2>🌍 Environmental Impact</h2><p id="impact"></p></div>
+    </div>
+
+    <div class="panel">
+      <h2>💡 Disposal Recommendation</h2>
+      <div id="reco" class="reco"></div>
+    </div>
+
+    <div class="panel">
+      <h2>📋 Detailed Probability Table</h2>
+      <table><thead><tr><th>Waste Type</th><th>Probability (%)</th></tr></thead><tbody id="tbody"></tbody></table>
+    </div>
+  </section>
+
+  <section class="footer-stats">
+    <div><small>Waste Categories</small><b>5</b></div>
+    <div><small>Model</small><b>EfficientNetV2-S</b></div>
+    <div><small>Runtime</small><b>ONNX Runtime Web</b></div>
+  </section>
+</main>
+<footer>♻️ Smart Waste Detection System | AI for Sustainable Waste Management</footer>
+
+<canvas id="canvas" width="224" height="224" hidden></canvas>
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
